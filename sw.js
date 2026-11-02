@@ -1,7 +1,6 @@
-// Guarda a "casca" do app para abrir rápido. O formulário em si sempre vem da internet.
-const CACHE = "relatorio-54ieq-v1";
+// Guarda a "casca" do app para abrir rápido. Os dados sempre vêm da internet.
+const CACHE = "relatorio-54ieq-v2";
 const ARQUIVOS = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "favicon.png"];
-
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARQUIVOS)).then(() => self.skipWaiting()));
 });
@@ -10,9 +9,9 @@ self.addEventListener("activate", e => {
 });
 self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
-  if (url.origin !== location.origin) return; // Google: sempre pela internet
+  if (e.request.method !== "GET" || url.origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request).then(r => { const copia = r.clone(); caches.open(CACHE).then(c => c.put(e.request, copia)); return r; })
+    fetch(e.request).then(r => { if (r.ok) { const c = r.clone(); caches.open(CACHE).then(x => x.put(e.request, c)); } return r; })
       .catch(() => caches.match(e.request).then(r => r || caches.match("index.html")))
   );
 });
