@@ -134,6 +134,21 @@ button:disabled{opacity:.5;cursor:default}
 .menu-btn b{display:block;font-family:var(--display);font-size:19px;letter-spacing:.01em}
 .menu-btn span.d{display:block;color:var(--muted);font-weight:400;font-size:14px;margin-top:2px}
 .menu-btn.alt .ic{background:var(--ok);color:#fff}
+.menu-btn.esc .ic{background:#6a1b9a;color:#fff}
+.esc-culto{border:1px solid var(--line);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--surface)}
+.esc-culto.passado{opacity:.6}
+.esc-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.esc-head b{font-family:var(--display);font-size:17px}
+.esc-head .hr{font-family:var(--mono);font-size:13px;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-weight:600}
+.esc-head .hr.noite{background:color-mix(in srgb,#6a1b9a 14%,transparent);color:#8e3fc0}
+.esc-vagas{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.esc-vagas input{padding:9px 10px}
+.esc-vagas input.mudou{border-color:var(--accent);background:var(--surface)}
+.fora-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:999px;background:color-mix(in srgb,var(--red) 10%,transparent);color:var(--fg);font-size:14px}
+.fora-chip button{border:0;background:transparent;color:var(--muted);padding:2px 8px;font-size:16px;line-height:1;border-radius:999px}
+.fora-chip button:hover{background:color-mix(in srgb,var(--red) 18%,transparent)}
+.esc-list{display:flex;flex-direction:column;gap:12px}
+.esc-sem{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
 .sair{align-self:center;border:0;background:transparent;color:var(--muted);text-decoration:underline;font-weight:500;padding:6px}
 .back{align-self:flex-start;padding:6px 12px;font-size:14px;margin-bottom:6px}
 /* ---- visitantes ---- */
@@ -202,6 +217,10 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
     <button type="button" class="menu-btn alt" data-go="vis">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M19 8v6M16 11h6"/></svg></span>
       <span><b>Visitantes</b><span class="d">Cadastrar visitantes e ver o relatório do dia</span></span>
+    </button>
+    <button type="button" class="menu-btn esc" data-go="esc">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 3v3M16 3v3M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></svg></span>
+      <span><b>Escala</b><span class="d">Escreva seu nome nos cultos em que vai servir</span></span>
     </button>
     <button type="button" class="sair" id="btnSair">Sair</button>
   </div>
@@ -300,6 +319,45 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
       <a class="btnlink" id="pdfLink" href="#" target="_blank" rel="noopener">Abrir PDF</a>
     </div>
   </section>
+</div>
+</div>
+
+<div id="esc" hidden>
+<div class="wrap">
+  <header class="top">
+    <button type="button" class="back" data-go="home">← Início</button>
+    <span class="eyebrow">54ª IEQ · Helpers</span>
+    <h1>Escala</h1>
+    <p class="sub">Escolha o mês, escreva seu nome nos cultos em que vai servir e toque em Salvar escala.</p>
+  </header>
+  <section class="card">
+    <div class="grid">
+      <label class="f">Mês<select id="escMes" style="font:inherit;color:var(--fg);background:var(--field);border:1px solid var(--line);border-radius:4px;padding:8px 10px"></select></label>
+      <label class="f">Ano<select id="escAno" style="font:inherit;color:var(--fg);background:var(--field);border:1px solid var(--line);border-radius:4px;padding:8px 10px"></select></label>
+    </div>
+    <p class="hint-p">Domingo: cultos às 10h e às 19h · Quarta-feira: culto às 20h · 4 helpers por culto.</p>
+  </section>
+  <datalist id="escNomes"></datalist>
+  <section class="card" id="escForaCard">
+    <h2>Não vou poder servir neste mês</h2>
+    <p class="hint-p">Se você não vai poder entrar na escala deste mês, escreva seu nome aqui e toque em Adicionar.</p>
+    <div class="row-btns">
+      <input id="escForaNome" list="escNomes" maxlength="60" placeholder="Seu nome" style="flex:1 1 180px" aria-label="Seu nome">
+      <button type="button" id="btnEscFora">Adicionar</button>
+    </div>
+    <div class="chips" id="escForaLista"></div>
+  </section>
+  <div class="esc-list" id="escList"><p class="hint-p">Carregando a escala…</p></div>
+  <div class="linkbox" id="escLinkBox" hidden>
+    <span>O PDF da escala ficou guardado no Google Drive. Abra para conferir e use o compartilhar do celular.</span>
+    <a class="btnlink" id="escPdfLink" href="#" target="_blank" rel="noopener">Abrir PDF</a>
+  </div>
+  <div class="actions">
+    <button class="primary" id="btnEscSalvar" type="button">Salvar escala</button>
+    <button id="btnEscPdf" type="button">Compartilhar PDF</button>
+    <button id="btnEscZap" type="button">Enviar pelo WhatsApp</button>
+    <span class="status" id="escStatus" role="status"></span>
+  </div>
 </div>
 </div>
 
@@ -604,9 +662,10 @@ let SENHA = "";
 try { SENHA = sessionStorage.getItem("refcSenha") || ""; } catch(_) {}
 
 function go(tela){
-  ["home","app","vis"].forEach(id => { $(id).hidden = id !== tela; });
+  ["home","app","vis","esc"].forEach(id => { $(id).hidden = id !== tela; });
   window.scrollTo(0,0);
   if (tela === "vis") visAbrir();
+  if (tela === "esc") escAbrir();
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
 function entrar(ok){
@@ -854,12 +913,217 @@ $("btnVisBaixar").onclick = () => {
   try { makeVisPdf(visRep).save(visPdfNome(visRep)); visSetStatus("rStatus","PDF baixado.","ok"); }
   catch(_) { visSetStatus("rStatus","Não deu para baixar direto. Use Gerar relatório em PDF.","err"); }
 };
+/* =================== ESCALA =================== */
+const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const VAGAS = 4;
+let escYm = "", escCultos = [], escSlots = {}, escFora = [], escIniciado = false, escCarregando = false;
+const pad2 = n => String(n).padStart(2,"0");
+function cultosDoMes(ym){
+  const [y,m] = ym.split("-").map(Number); const out = [];
+  const dias = new Date(y, m, 0).getDate();
+  for (let d=1; d<=dias; d++){
+    const wd = new Date(y, m-1, d).getDay(), iso = ym + "-" + pad2(d);
+    if (wd === 0){ out.push({iso, dia:"Domingo", hora:"10:00"}); out.push({iso, dia:"Domingo", hora:"19:00"}); }
+    if (wd === 3) out.push({iso, dia:"Quarta-feira", hora:"20:00"});
+  }
+  return out;
+}
+const chaveEsc = (c,v) => c.iso + "|" + c.hora + "|" + v;
+const horaTxt = h => h.slice(0,2).replace(/^0/,"") + "h" + (h.slice(3)==="00" ? "" : h.slice(3));
+function escDirty(){ return [...document.querySelectorAll("#escList input[data-k]")].some(i => i.value.trim() !== (escSlots[i.dataset.k]||"")); }
+function escSetStatus(msg,kind){ const s=$("escStatus"); s.textContent=msg; s.className="status"+(kind?" "+kind:""); }
+function escRender(){
+  const box = $("escList"); box.textContent = "";
+  const hoje = hojeISO(); let semAtual = "";
+  escCultos.forEach(c => {
+    const [y,m,d] = c.iso.split("-");
+    const sem = c.dia === "Domingo" ? "" : "";
+    const card = document.createElement("div"); card.className = "esc-culto" + (c.iso < hoje ? " passado" : "");
+    const head = document.createElement("div"); head.className = "esc-head";
+    const t = document.createElement("b"); t.textContent = c.dia + ", " + d + "/" + m;
+    const hr = document.createElement("span"); hr.className = "hr" + (c.hora >= "18:00" ? " noite" : ""); hr.textContent = horaTxt(c.hora);
+    head.append(t, hr);
+    const vg = document.createElement("div"); vg.className = "esc-vagas";
+    for (let v=1; v<=VAGAS; v++){
+      const k = chaveEsc(c,v);
+      const inp = document.createElement("input");
+      inp.dataset.k = k; inp.setAttribute("list","escNomes"); inp.autocomplete = "off"; inp.maxLength = 60;
+      inp.placeholder = "Helper " + v; inp.setAttribute("aria-label", c.dia + " " + d + "/" + m + " " + horaTxt(c.hora) + ", vaga " + v);
+      inp.value = escSlots[k] || "";
+      inp.addEventListener("input", () => inp.classList.toggle("mudou", inp.value.trim() !== (escSlots[k]||"")));
+      vg.appendChild(inp);
+    }
+    card.append(head, vg); box.appendChild(card);
+  });
+  if (!escCultos.length){ const p=document.createElement("p"); p.className="hint-p"; p.textContent="Nenhum culto neste mês."; box.appendChild(p); }
+}
+function escForaRender(){
+  const box = $("escForaLista"); box.textContent = "";
+  if (!escFora.length){ const s=document.createElement("span"); s.className="hint-p"; s.textContent="Ninguém marcou que não pode servir neste mês."; box.appendChild(s); return; }
+  escFora.forEach(n => {
+    const c = document.createElement("span"); c.className = "fora-chip";
+    const t = document.createElement("span"); t.textContent = n;
+    const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.title = "Tirar " + n + " da lista"; x.setAttribute("aria-label","Tirar " + n + " da lista");
+    x.onclick = () => escMarcarFora(n, false);
+    c.append(t, x); box.appendChild(c);
+  });
+}
+function escMarcarFora(nome, incluir){
+  nome = String(nome||"").trim().replace(/\s+/g," ");
+  if (nome.length < 2){ escSetStatus("Escreva o seu nome para marcar que não vai poder servir.","err"); $("escForaNome").focus(); return; }
+  const ym = escYm; $("btnEscFora").disabled = true; escSetStatus(incluir ? "Adicionando…" : "Tirando da lista…");
+  google.script.run
+    .withSuccessHandler(res => { $("btnEscFora").disabled = false; if (ym !== escYm) return; escFora = res.fora || []; escNomesLista(res.nomes); escForaRender();
+      if (incluir){ $("escForaNome").value = ""; escSetStatus("✓ " + nome + " não será escalado(a) em " + escTitulo() + ".","ok"); } else escSetStatus("✓ " + nome + " saiu da lista.","ok"); })
+    .withFailureHandler(err => { $("btnEscFora").disabled = false; escSetStatus((err && err.message) || "Não foi possível salvar.","err"); })
+    .marcarForaEscala(SENHA, ym, nome, incluir);
+}
+$("btnEscFora").onclick = () => escMarcarFora($("escForaNome").value, true);
+$("escForaNome").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); escMarcarFora($("escForaNome").value, true); } });
+function escNomesLista(nomes){ const dl=$("escNomes"); dl.textContent=""; (nomes||[]).forEach(n=>{ const o=document.createElement("option"); o.value=n; dl.appendChild(o); }); }
+function escCarregar(){
+  const ym = $("escAno").value + "-" + $("escMes").value;
+  escYm = ym; escCultos = cultosDoMes(ym); escSlots = {}; escFora = []; $("escLinkBox").hidden = true;
+  $("escForaCard").querySelector("h2").textContent = "Não vou poder servir em " + escTitulo();
+  escRender(); escForaRender(); escCarregando = true;
+  document.querySelectorAll("#escList input").forEach(i => i.disabled = true);
+  escSetStatus("Carregando a escala…");
+  google.script.run
+    .withSuccessHandler(res => { escCarregando = false; if (res.ym !== escYm) return; escSlots = res.slots || {}; escFora = res.fora || []; escNomesLista(res.nomes); escRender(); escForaRender(); escSetStatus(""); })
+    .withFailureHandler(err => { escCarregando = false; document.querySelectorAll("#escList input").forEach(i => i.disabled = false); escSetStatus((err && err.message) || "Não foi possível carregar a escala.", "err"); })
+    .obterEscala(SENHA, ym);
+}
+let escYmAnterior = "";
+function escTrocaMes(){
+  if (escDirty()){
+    const [y,m] = escYmAnterior.split("-"); $("escAno").value = y; $("escMes").value = m;
+    escSetStatus("Você tem nomes que ainda não foram salvos. Toque em Salvar escala antes de trocar o mês.", "err");
+    return;
+  }
+  escYmAnterior = $("escAno").value + "-" + $("escMes").value;
+  escCarregar();
+}
+function escAbrir(){
+  if (!escIniciado){
+    escIniciado = true;
+    const hoje = new Date(); const yNow = hoje.getFullYear();
+    MESES.forEach((n,i) => { const o=document.createElement("option"); o.value=pad2(i+1); o.textContent=n; $("escMes").appendChild(o); });
+    for (let y=yNow-1; y<=yNow+1; y++){ const o=document.createElement("option"); o.value=String(y); o.textContent=String(y); $("escAno").appendChild(o); }
+    $("escMes").value = pad2(hoje.getMonth()+1); $("escAno").value = String(yNow);
+    $("escMes").addEventListener("change", escTrocaMes); $("escAno").addEventListener("change", escTrocaMes);
+    escYmAnterior = $("escAno").value + "-" + $("escMes").value;
+  }
+  if (!escDirty()) escCarregar();
+}
+$("btnEscSalvar").onclick = () => {
+  if (escCarregando) return;
+  const mud = [...document.querySelectorAll("#escList input[data-k]")]
+    .filter(i => i.value.trim() !== (escSlots[i.dataset.k]||""))
+    .map(i => ({ chave:i.dataset.k, nome:i.value.trim().replace(/\s+/g," "), anterior: escSlots[i.dataset.k]||"" }));
+  if (!mud.length){ escSetStatus("Nada para salvar. Escreva seu nome em um culto primeiro."); return; }
+  $("btnEscSalvar").disabled = true; escSetStatus("Salvando…");
+  const ym = escYm;
+  google.script.run
+    .withSuccessHandler(res => {
+      $("btnEscSalvar").disabled = false;
+      if (ym !== escYm) return;
+      // mantém o que a pessoa escreveu nas vagas em conflito, para ela ver
+      const meus = {}; mud.forEach(m => meus[m.chave] = m.nome);
+      escSlots = res.slots || {}; escFora = res.fora || []; escNomesLista(res.nomes); escRender(); escForaRender();
+      if (res.conflitos && res.conflitos.length){
+        const nomes = res.conflitos.map(c => { const [iso,h] = c.chave.split("|"); return iso.slice(8,10)+"/"+iso.slice(5,7)+" "+horaTxt(h) + (c.atual ? " (" + c.atual + ")" : ""); });
+        escSetStatus("Salvo, mas " + res.conflitos.length + " vaga(s) foram preenchidas por outra pessoa enquanto você editava: " + nomes.join(", ") + ". Escolha outra vaga.", "err");
+      } else {
+        const norm = n => n.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+        const foraN = escFora.map(norm);
+        const ambos = [...new Set(mud.map(m => m.nome).filter(n => n && foraN.includes(norm(n))))];
+        escSetStatus("✓ Escala salva." + (ambos.length ? " Atenção: " + ambos.join(", ") + " também está na lista de quem não pode servir neste mês." : ""), ambos.length ? "err" : "ok");
+      }
+    })
+    .withFailureHandler(err => { $("btnEscSalvar").disabled = false; escSetStatus("Não foi possível salvar: " + ((err && err.message) || "erro") + ". Tente de novo.", "err"); })
+    .salvarEscala(SENHA, ym, mud);
+};
+const escTitulo = () => { const [y,m] = escYm.split("-"); return MESES[Number(m)-1] + " de " + y; };
+function escTexto(){
+  let t = "*Escala de Helpers – " + escTitulo() + "*\n54ª IEQ\n";
+  let dataAnt = "";
+  escCultos.forEach(c => {
+    const [y,m,d] = c.iso.split("-");
+    if (c.iso !== dataAnt){ t += "\n📅 *" + c.dia + ", " + d + "/" + m + "*\n"; dataAnt = c.iso; }
+    const nomes = []; for (let v=1; v<=VAGAS; v++){ const n = escSlots[chaveEsc(c,v)]; if (n) nomes.push(n); }
+    const falta = VAGAS - nomes.length;
+    t += "• " + horaTxt(c.hora) + ": " + (nomes.length ? nomes.join(", ") : "—") + (falta ? "  _(" + falta + " vaga" + (falta>1?"s":"") + ")_" : "") + "\n";
+  });
+  if (escFora.length) t += "\n🚫 *Não vão servir neste mês:* " + escFora.join(", ") + "\n";
+  return t;
+}
+function escPrecisaSalvar(){ if (escDirty()){ escSetStatus("Salve a escala antes de compartilhar.", "err"); return true; } return false; }
+$("btnEscZap").onclick = async () => {
+  if (escCarregando || escPrecisaSalvar()) return;
+  const txt = escTexto();
+  if (navigator.share){ try { await navigator.share({ text: txt }); return; } catch(e){ if (e && e.name === "AbortError") return; } }
+  const a = document.createElement("a"); a.href = "https://wa.me/?text=" + encodeURIComponent(txt); a.target = "_blank"; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+function makeEscPdf(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:"mm",format:"a4"});
+  const L=12, R=198, W=R-L, NAVY=[13,27,58], GRAY=[95,104,120];
+  const t=(s,x,y,o={})=>{ doc.setFont("helvetica",o.b?"bold":"normal"); doc.setFontSize(o.s||9); doc.setTextColor(...(o.c||[20,24,32])); doc.text(String(s??""),x,y,{align:o.a||"left"}); };
+  const corta=(s,w,size)=>{ doc.setFontSize(size); s=String(s||""); if (doc.getTextWidth(s)<=w) return s; while (s.length>1 && doc.getTextWidth(s+"…")>w) s=s.slice(0,-1); return s+"…"; };
+  const cols=[["Data",18],["Dia",22],["Horário",16]]; const vw=(W-56)/VAGAS; for(let v=1;v<=VAGAS;v++) cols.push(["Helper "+v,vw]);
+  const cab=()=>{
+    try{ doc.addImage(LOGO,"JPEG",L,10,20,20); }catch(_){}
+    t("54ª IGREJA DO EVANGELHO QUADRANGULAR",L+24,15.5,{b:1,s:12,c:NAVY});
+    t("Escala de Helpers",L+24,23,{b:1,s:15,c:NAVY});
+    t(escTitulo(),L+24,29,{s:11,c:GRAY});
+    doc.setDrawColor(...NAVY); doc.setLineWidth(.6); doc.line(L,33,R,33);
+  };
+  const cabT=y=>{ doc.setFillColor(...NAVY); doc.rect(L,y,W,7,"F"); let x=L; cols.forEach(([h,w])=>{ t(h,x+1.5,y+4.8,{b:1,s:8,c:[255,255,255]}); x+=w; }); return y+7; };
+  cab(); let y=cabT(37); const rh=8; let dataAnt="", faixa=false;
+  escCultos.forEach(c=>{
+    if (y+rh>282){ doc.addPage(); cab(); y=cabT(37); }
+    if (c.iso!==dataAnt){ faixa=!faixa; dataAnt=c.iso; }
+    if (faixa){ doc.setFillColor(243,245,249); doc.rect(L,y,W,rh,"F"); }
+    doc.setDrawColor(225,229,236); doc.setLineWidth(.2); doc.line(L,y+rh,R,y+rh);
+    const [yy,m,d]=c.iso.split("-");
+    const vals=[d+"/"+m, c.dia==="Quarta-feira"?"Quarta":"Domingo", horaTxt(c.hora)];
+    for(let v=1;v<=VAGAS;v++) vals.push(escSlots[chaveEsc(c,v)]||"");
+    let x=L; cols.forEach(([h,w],k)=>{ t(corta(vals[k]||(k>2?"—":""),w-3,8.5),x+1.5,y+5.2,{s:8.5,b:k<3,c:k>2&&!vals[k]?[175,180,190]:[20,24,32]}); x+=w; });
+    y+=rh;
+  });
+  if (escFora.length){
+    if (y+16>282){ doc.addPage(); cab(); y=37; }
+    y+=8; t("Não vão servir neste mês:",L,y,{b:1,s:9.5,c:NAVY});
+    const linhas=doc.splitTextToSize(escFora.join(", "), W); doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(20,24,32); doc.text(linhas, L, y+5.5);
+  }
+  const n=doc.getNumberOfPages(), agora=new Date().toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"});
+  for(let p=1;p<=n;p++){ doc.setPage(p); t("Gerado em "+agora,L,291,{s:7,c:GRAY}); t("Página "+p+" de "+n,R,291,{s:7,c:GRAY,a:"right"}); }
+  return doc;
+}
+const escPdfNome = () => "Escala_Helpers_" + escYm + ".pdf";
+$("btnEscPdf").onclick = async () => {
+  if (escCarregando || escPrecisaSalvar()) return;
+  if (!window.jspdf){ escSetStatus("O gerador de PDF não carregou. Recarregue a página.","err"); return; }
+  const doc = makeEscPdf();
+  try {
+    const file = new File([doc.output("blob")], escPdfNome(), {type:"application/pdf"});
+    if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:"Escala de Helpers – " + escTitulo()}); escSetStatus(""); return; }
+  } catch(e){ if (e && e.name === "AbortError") return; }
+  // sem compartilhamento direto: guarda no Drive e mostra o link
+  $("btnEscPdf").disabled = true; escSetStatus("Gerando o PDF…");
+  google.script.run
+    .withSuccessHandler(res => { $("btnEscPdf").disabled = false; escSetStatus("PDF pronto.","ok"); $("escPdfLink").href = res.link; $("escLinkBox").hidden = false; $("escLinkBox").scrollIntoView({behavior:"smooth",block:"nearest"}); })
+    .withFailureHandler(err => { $("btnEscPdf").disabled = false; escSetStatus("Não foi possível gerar: " + ((err && err.message) || "erro") + ".","err"); })
+    .salvarPdfEscala(SENHA, escYm, doc.output("datauristring").split(",")[1], escPdfNome());
+};
+
 let visIniciado = false;
 function visAbrir(){
   if (!visIniciado){ visIniciado = true; $("vData").value = hojeISO(); ajustaDia(); $("rData").value = hojeISO(); }
   carregarDatas(); carregarVisitantes();
 }
-$("btnSair").onclick = () => { try{ sessionStorage.removeItem("refcSenha"); }catch(_){} SENHA=""; ["home","app","vis"].forEach(id=>$(id).hidden=true); $("senha").value=""; $("btnEntrar").disabled=false; $("lockStatus").textContent=""; $("lock").hidden=false; };
+$("btnSair").onclick = () => { try{ sessionStorage.removeItem("refcSenha"); }catch(_){} SENHA=""; ["home","app","vis","esc"].forEach(id=>$(id).hidden=true); $("senha").value=""; $("btnEntrar").disabled=false; $("lockStatus").textContent=""; $("lock").hidden=false; };
 </script>
 </body>
 </html>
