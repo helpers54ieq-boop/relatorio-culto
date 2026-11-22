@@ -135,17 +135,21 @@ button:disabled{opacity:.5;cursor:default}
 .menu-btn span.d{display:block;color:var(--muted);font-weight:400;font-size:14px;margin-top:2px}
 .menu-btn.alt .ic{background:var(--ok);color:#fff}
 .menu-btn.esc .ic{background:#6a1b9a;color:#fff}
-.esc-culto{border:1px solid var(--line);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--surface)}
+.esc-culto{--c:#64748b;border:2px solid var(--c);border-radius:8px;padding:0 12px 12px;display:flex;flex-direction:column;gap:10px;background:color-mix(in srgb,var(--c) 7%,var(--surface));overflow:hidden}
+.esc-culto.t-dom10{--c:#e07b00}
+.esc-culto.t-dom19{--c:#1d5fd1}
+.esc-culto.t-qua20{--c:#7b2fbf}
+.esc-legenda{display:flex;flex-wrap:wrap;gap:8px}
+.esc-legenda span{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;color:#fff;background:var(--c)}
 .esc-culto.passado{opacity:.6}
-.esc-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.esc-head b{font-family:var(--display);font-size:17px}
-.esc-head .hr{font-family:var(--mono);font-size:13px;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-weight:600}
-.esc-head .hr.noite{background:color-mix(in srgb,#6a1b9a 14%,transparent);color:#8e3fc0}
+.esc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:var(--c);color:#fff;margin:0 -12px;padding:10px 12px}
+.esc-head b{font-family:var(--display);font-size:17px;color:#fff}
+.esc-head .hr{font-family:var(--display);font-size:14px;padding:3px 10px;border-radius:999px;background:#fff;color:var(--c);font-weight:800}
 .esc-vagas{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .esc-vagas input{padding:9px 10px}
-.esc-add{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px dashed var(--line);border-radius:4px;background:transparent;color:var(--accent);padding:8px;min-height:40px;font-weight:600;font-size:14px}
+.esc-add{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px dashed color-mix(in srgb,var(--c,var(--accent)) 55%,transparent);border-radius:4px;background:transparent;color:var(--c,var(--accent));padding:8px;min-height:40px;font-weight:600;font-size:14px}
 .esc-add svg{width:20px;height:20px}
-.esc-add:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.esc-add:hover{border-color:var(--c,var(--accent));background:color-mix(in srgb,var(--c,var(--accent)) 10%,transparent)}
 .esc-vagas input.mudou{border-color:var(--accent);background:var(--surface)}
 .fora-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:999px;background:color-mix(in srgb,var(--red) 10%,transparent);color:var(--fg);font-size:14px}
 .fora-chip button{border:0;background:transparent;color:var(--muted);padding:2px 8px;font-size:16px;line-height:1;border-radius:999px}
@@ -338,7 +342,12 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
       <label class="f">Mês<select id="escMes" style="font:inherit;color:var(--fg);background:var(--field);border:1px solid var(--line);border-radius:4px;padding:8px 10px"></select></label>
       <label class="f">Ano<select id="escAno" style="font:inherit;color:var(--fg);background:var(--field);border:1px solid var(--line);border-radius:4px;padding:8px 10px"></select></label>
     </div>
-    <p class="hint-p">Domingo: cultos às 10h e às 19h · Quarta-feira: culto às 20h · Cada culto tem 4 vagas. Precisa de mais? Toque no ⊕ do culto.</p>
+    <div class="esc-legenda" aria-label="Cores dos cultos">
+      <span style="--c:#e07b00">☀️ Domingo 10h</span>
+      <span style="--c:#1d5fd1">🌙 Domingo 19h</span>
+      <span style="--c:#7b2fbf">⛪ Quarta 20h</span>
+    </div>
+    <p class="hint-p">Cada culto tem 4 vagas. Precisa de mais? Toque no ⊕ do culto.</p>
   </section>
   <datalist id="escNomes"></datalist>
   <div class="esc-list" id="escList"><p class="hint-p">Carregando a escala…</p></div>
@@ -935,6 +944,11 @@ const chaveEsc = (c,v) => c.iso + "|" + c.hora + "|" + v;
 const horaTxt = h => h.slice(0,2).replace(/^0/,"") + "h" + (h.slice(3)==="00" ? "" : h.slice(3));
 function escDirty(){ return [...document.querySelectorAll("#escList input[data-k]")].some(i => i.value.trim() !== (escSlots[i.dataset.k]||"")); }
 function escSetStatus(msg,kind){ const s=$("escStatus"); s.textContent=msg; s.className="status"+(kind?" "+kind:""); }
+function tipoCulto(c){
+  if (c.dia === "Quarta-feira") return { cls:"t-qua20", ic:"⛪", zap:"🟣", rgb:[123,47,191], tint:[243,235,250] };
+  if (c.hora === "10:00") return { cls:"t-dom10", ic:"☀️", zap:"🟠", rgb:[224,123,0], tint:[253,242,228] };
+  return { cls:"t-dom19", ic:"🌙", zap:"🔵", rgb:[29,95,209], tint:[232,239,251] };
+}
 function escVagasSalvas(c){ let mx = 0; const pre = c.iso + "|" + c.hora + "|"; Object.keys(escSlots).forEach(k => { if (k.indexOf(pre) === 0) mx = Math.max(mx, Number(k.slice(pre.length))); }); return mx; }
 function escNomesDe(c){ const pre = c.iso + "|" + c.hora + "|"; return Object.keys(escSlots).filter(k => k.indexOf(pre) === 0 && escSlots[k]).sort((a,b) => Number(a.slice(pre.length)) - Number(b.slice(pre.length))).map(k => escSlots[k]); }
 function escRender(){
@@ -942,11 +956,10 @@ function escRender(){
   const hoje = hojeISO(); let semAtual = "";
   escCultos.forEach(c => {
     const [y,m,d] = c.iso.split("-");
-    const sem = c.dia === "Domingo" ? "" : "";
-    const card = document.createElement("div"); card.className = "esc-culto" + (c.iso < hoje ? " passado" : "");
+    const card = document.createElement("div"); card.className = "esc-culto " + tipoCulto(c).cls + (c.iso < hoje ? " passado" : "");
     const head = document.createElement("div"); head.className = "esc-head";
     const t = document.createElement("b"); t.textContent = c.dia + ", " + d + "/" + m;
-    const hr = document.createElement("span"); hr.className = "hr" + (c.hora >= "18:00" ? " noite" : ""); hr.textContent = horaTxt(c.hora);
+    const hr = document.createElement("span"); hr.className = "hr"; hr.textContent = tipoCulto(c).ic + " " + horaTxt(c.hora);
     head.append(t, hr);
     const vg = document.createElement("div"); vg.className = "esc-vagas";
     let n = 0;
@@ -1060,14 +1073,14 @@ $("btnEscSalvar").onclick = () => {
 };
 const escTitulo = () => { const [y,m] = escYm.split("-"); return MESES[Number(m)-1] + " de " + y; };
 function escTexto(){
-  let t = "*Escala de Helpers – " + escTitulo() + "*\n54ª IEQ\n";
+  let t = "*Escala de Helpers – " + escTitulo() + "*\n54ª IEQ\n🟠 Domingo 10h · 🔵 Domingo 19h · 🟣 Quarta 20h\n";
   let dataAnt = "";
   escCultos.forEach(c => {
     const [y,m,d] = c.iso.split("-");
     if (c.iso !== dataAnt){ t += "\n📅 *" + c.dia + ", " + d + "/" + m + "*\n"; dataAnt = c.iso; }
     const nomes = escNomesDe(c);
     const falta = Math.max(0, VAGAS - nomes.length);
-    t += "• " + horaTxt(c.hora) + ": " + (nomes.length ? nomes.join(", ") : "—") + (falta ? "  _(" + falta + " vaga" + (falta>1?"s":"") + ")_" : "") + "\n";
+    t += tipoCulto(c).zap + " " + horaTxt(c.hora) + ": " + (nomes.length ? nomes.join(", ") : "—") + (falta ? "  _(" + falta + " vaga" + (falta>1?"s":"") + ")_" : "") + "\n";
   });
   if (escFora.length) t += "\n🚫 *Não vão servir neste mês:* " + escFora.join(", ") + "\n";
   return t;
@@ -1092,6 +1105,8 @@ function makeEscPdf(){
     t("54ª IGREJA DO EVANGELHO QUADRANGULAR",L+24,15.5,{b:1,s:12,c:NAVY});
     t("Escala de Helpers",L+24,23,{b:1,s:15,c:NAVY});
     t(escTitulo(),L+24,29,{s:11,c:GRAY});
+    [["Domingo 10h",[224,123,0]],["Domingo 19h",[29,95,209]],["Quarta 20h",[123,47,191]]].forEach(([lab,cor],i)=>{
+      const yy=15+i*6; doc.setFillColor(...cor); doc.roundedRect(R-30,yy-3.4,4,4,0.8,0.8,"F"); t(lab,R-24.5,yy,{s:8,b:1,c:cor}); });
     doc.setDrawColor(...NAVY); doc.setLineWidth(.6); doc.line(L,33,R,33);
   };
   const cabT=y=>{ doc.setFillColor(...NAVY); doc.rect(L,y,W,7,"F"); let x=L; cols.forEach(([h,w])=>{ t(h,x+1.5,y+4.8,{b:1,s:8,c:[255,255,255]}); x+=w; }); return y+7; };
@@ -1103,12 +1118,13 @@ function makeEscPdf(){
     const linhasH = txtH ? doc.splitTextToSize(txtH, W-59-(falta?18:0)) : [];
     const rh = Math.max(8, linhasH.length*4.2+3.8);
     if (y+rh>282){ doc.addPage(); cab(); y=cabT(37); }
-    if (c.iso!==dataAnt){ faixa=!faixa; dataAnt=c.iso; }
-    if (faixa){ doc.setFillColor(243,245,249); doc.rect(L,y,W,rh,"F"); }
+    const tp=tipoCulto(c);
+    doc.setFillColor(...tp.tint); doc.rect(L,y,W,rh,"F");
+    doc.setFillColor(...tp.rgb); doc.rect(L,y,2.2,rh,"F");
     doc.setDrawColor(225,229,236); doc.setLineWidth(.2); doc.line(L,y+rh,R,y+rh);
     const [yy,m,d]=c.iso.split("-");
     const vals=[d+"/"+m, c.dia==="Quarta-feira"?"Quarta":"Domingo", horaTxt(c.hora)];
-    let x=L; cols.slice(0,3).forEach(([h,w],k)=>{ t(vals[k],x+1.5,y+5.2,{s:8.5,b:1}); x+=w; });
+    let x=L; cols.slice(0,3).forEach(([h,w],k)=>{ t(vals[k],x+(k?1.5:3.5),y+5.2,{s:8.5,b:1,c:k===2?tp.rgb:[20,24,32]}); x+=w; });
     if (linhasH.length){ doc.setFont("helvetica","normal"); doc.setFontSize(8.5); doc.setTextColor(20,24,32); doc.text(linhasH, x+1.5, y+5.2); }
     else t("—",x+1.5,y+5.2,{s:8.5,c:[175,180,190]});
     if (falta){ const lastY = y+5.2+Math.max(0,linhasH.length-1)*4.2; doc.setFont("helvetica","normal"); doc.setFontSize(7.5); doc.setTextColor(179,32,28); doc.text(falta+" vaga"+(falta>1?"s":""), R-1.5, lastY, {align:"right"}); }
