@@ -94,6 +94,14 @@ td.n{font-family:var(--mono);font-size:12px;color:var(--muted);width:28px;text-a
 td input{padding:6px 8px}
 .pastores{display:flex;flex-direction:column;gap:8px}
 .chk{display:flex;gap:10px;align-items:center}
+.opts{border:0;padding:0;margin:16px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.opts legend{font-size:14px;color:var(--muted);margin-bottom:8px;padding:0}
+.opts legend small{font-size:12px}
+.opt{position:relative;cursor:pointer}
+.opt input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opt span{display:inline-block;padding:10px 16px;border:1.5px solid var(--line);border-radius:999px;background:var(--field);font-size:15px;font-weight:600;color:var(--fg)}
+.opt input:checked+span{border-color:var(--accent);background:var(--accent);color:#fff}
+.opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 label.pchk{display:flex;gap:12px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:var(--field);cursor:pointer;font-size:15px}
 label.pchk:has(input:checked){border-color:var(--accent);background:var(--surface);font-weight:600}
 label.pchk input{width:22px;height:22px;flex:none;accent-color:var(--accent)}
@@ -156,6 +164,34 @@ button:disabled{opacity:.5;cursor:default}
 .fora-chip button:hover{background:color-mix(in srgb,var(--red) 18%,transparent)}
 .esc-list{display:flex;flex-direction:column;gap:12px}
 .esc-sem{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.auth{display:flex;flex-direction:column;gap:10px}
+.linkbtn{border:0;background:transparent;color:var(--muted);font-weight:500;padding:8px;text-align:center}
+.linkbtn b{color:var(--accent)}
+.menu-btn.adm .ic{background:#0f766e;color:#fff}
+.usu-list{display:flex;flex-direction:column;gap:12px}
+.usu{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.usu.pend{border:2px solid #e07b00}
+.usu.off{opacity:.65}
+.usu-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.usu-top b{font-family:var(--display);font-size:17px}
+.usu-top .lg{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.sit{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+.sit.Ativo{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.sit.pend{background:color-mix(in srgb,#e07b00 18%,transparent);color:#b45f00}
+.sit.Desativado{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}
+.perm-box{display:flex;flex-wrap:wrap;gap:8px}
+.perm-box label{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--field);font-size:14px;cursor:pointer;color:var(--fg)}
+.perm-box label:has(input:checked){border-color:var(--accent);background:var(--surface);font-weight:600}
+.perm-box input{width:18px;height:18px;accent-color:var(--accent)}
+.usu .row-btns button{padding:8px 12px;font-size:14px}
+.usu .acesso{font-size:12px;color:var(--muted)}
+.btn-corr{align-self:flex-start;margin-top:8px;font-size:14px;padding:8px 14px;border-color:var(--accent);color:var(--accent)}
+.editing{display:block;margin-top:8px;padding:10px 12px;border-radius:6px;background:color-mix(in srgb,#e07b00 14%,transparent);border:1px solid #e07b00;color:var(--fg);font-size:14px;font-weight:600}
+.corr-list{display:flex;flex-direction:column;gap:8px}
+.corr-item{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--field)}
+.corr-item b{font-family:var(--display)}
+.corr-item small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.corr-item button{padding:7px 14px;font-size:14px}
 .sair{align-self:center;border:0;background:transparent;color:var(--muted);text-decoration:underline;font-weight:500;padding:6px}
 .back{align-self:flex-start;padding:6px 12px;font-size:14px;margin-bottom:6px}
 /* ---- visitantes ---- */
@@ -201,35 +237,77 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
 <div class="lock" id="lock">
   <section class="card">
     <img class="logo" id="logoLock" alt="Logo da Igreja do Evangelho Quadrangular">
-    <span class="eyebrow">54ª IEQ · REFC</span>
-    <h1 style="font-size:22px">Relatório de culto</h1>
-    <p>Digite a senha da igreja para entrar.</p>
-    <form id="lockForm" style="display:flex;flex-direction:column;gap:10px">
-      <label class="f">Senha<input id="senha" type="password" autocomplete="current-password"></label>
+    <span class="eyebrow">54ª IEQ · App dos Helpers</span>
+
+    <form id="fEntrar" class="auth" novalidate>
+      <h1 style="font-size:22px">Entrar</h1>
+      <p>Digite seu usuário e sua senha.</p>
+      <label class="f">Usuário<input id="aLogin" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+      <label class="f">Senha<input id="aSenha" type="password" autocomplete="current-password"></label>
       <button class="primary" type="submit" id="btnEntrar">Entrar</button>
-      <span class="status" id="lockStatus" role="status"></span>
+      <button type="button" class="linkbtn" data-auth="fCadastro">Não tem conta? <b>Cadastre-se</b></button>
     </form>
+
+    <form id="fCadastro" class="auth" novalidate hidden>
+      <h1 style="font-size:22px">Criar meu cadastro</h1>
+      <p>Depois de enviar, aguarde o administrador liberar o seu acesso.</p>
+      <label class="f">Nome completo<input id="cNome" autocomplete="name" autocapitalize="words"></label>
+      <label class="f">Escolha um usuário<input id="cLogin" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ex.: maria.silva"></label>
+      <label class="f">Crie uma senha<input id="cSenha" type="password" autocomplete="new-password" placeholder="pelo menos 4 caracteres"></label>
+      <label class="f">Repita a senha<input id="cSenha2" type="password" autocomplete="new-password"></label>
+      <button class="primary" type="submit" id="btnCadastrar">Enviar cadastro</button>
+      <button type="button" class="linkbtn" data-auth="fEntrar">Já tenho conta. <b>Entrar</b></button>
+    </form>
+
+    <form id="fAdmin0" class="auth" novalidate hidden>
+      <h1 style="font-size:22px">Configurar o app</h1>
+      <p>Primeiro acesso: crie a conta do administrador. Você vai precisar da senha atual da igreja.</p>
+      <label class="f">Senha atual da igreja<input id="sIgreja" type="password" autocomplete="off"></label>
+      <label class="f">Seu nome<input id="sNome" autocomplete="name" autocapitalize="words"></label>
+      <label class="f">Seu usuário<input id="sLogin" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="ex.: gregory"></label>
+      <label class="f">Sua senha<input id="sSenha" type="password" autocomplete="new-password"></label>
+      <button class="primary" type="submit" id="btnAdmin0">Criar administrador</button>
+    </form>
+
+    <form id="fTroca" class="auth" novalidate hidden>
+      <h1 style="font-size:22px">Crie sua senha</h1>
+      <p id="tMsg">Por segurança, troque a senha provisória por uma só sua.</p>
+      <label class="f">Senha atual (provisória)<input id="tAtual" type="password" autocomplete="current-password"></label>
+      <label class="f">Nova senha<input id="tNova" type="password" autocomplete="new-password" placeholder="pelo menos 4 caracteres"></label>
+      <label class="f">Repita a nova senha<input id="tNova2" type="password" autocomplete="new-password"></label>
+      <button class="primary" type="submit" id="btnTroca">Salvar nova senha</button>
+      <button type="button" class="linkbtn" id="btnTrocaVoltar" hidden>Voltar</button>
+    </form>
+    <span class="status" id="lockStatus" role="status"></span>
   </section>
 </div>
 <div class="home" id="home" hidden>
   <div class="inner">
     <div class="brand">
       <img class="logo" id="logoHome" alt="Logo da 54ª Igreja do Evangelho Quadrangular">
-      <div><h1>54ª IEQ</h1><p>O que você vai fazer agora?</p></div>
+      <div><h1>54ª IEQ</h1><p>Olá, <b id="olaNome"></b>! O que você vai fazer agora?</p></div>
     </div>
-    <button type="button" class="menu-btn" data-go="app">
+    <button type="button" class="menu-btn" data-go="app" data-perm="relatorio">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></span>
       <span><b>Fazer relatório</b><span class="d">Relatório estatístico e financeiro do culto</span></span>
     </button>
-    <button type="button" class="menu-btn alt" data-go="vis">
+    <button type="button" class="menu-btn alt" data-go="vis" data-perm="visitantes">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M19 8v6M16 11h6"/></svg></span>
       <span><b>Visitantes</b><span class="d">Cadastrar visitantes e ver o relatório do dia</span></span>
     </button>
-    <button type="button" class="menu-btn esc" data-go="esc">
+    <button type="button" class="menu-btn esc" data-go="esc" data-perm="escala">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 3v3M16 3v3M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></svg></span>
       <span><b>Escala</b><span class="d">Escreva seu nome nos cultos em que vai servir</span></span>
     </button>
-    <button type="button" class="sair" id="btnSair">Sair</button>
+    <button type="button" class="menu-btn adm" data-go="adm" data-perm="admin">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M19.5 10.5v-1.2M19.5 16.7v-1.2M16.8 13h-1.2M23.4 13h-1.2M17.6 11.1l-.8-.8M22.2 15.7l-.8-.8M17.6 14.9l-.8.8M22.2 10.3l-.8.8"/><circle cx="19.5" cy="13" r="1.6"/></svg></span>
+      <span><b>Usuários</b><span class="d">Cadastrar pessoas e liberar o que cada uma pode usar</span></span>
+    </button>
+    <p class="hint-p" id="semPerm" hidden>Seu acesso ainda não tem nenhuma área liberada. Fale com o administrador.</p>
+    <div class="row-btns" style="justify-content:center;gap:18px">
+      <button type="button" class="sair" id="btnMinhaSenha">Trocar minha senha</button>
+      <button type="button" class="sair" id="btnSair">Sair</button>
+    </div>
   </div>
 </div>
 
@@ -242,8 +320,14 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
     <h1>54ª Igreja do Evangelho Quadrangular</h1>
     <p class="sub">Rua Carmelo Greca Junior, 120 · Jardim Esmeralda · Xaxim · Curitiba‑PR · COD 2716</p>
     <p class="pastor">Pastor titular: <b>JAIRO JOAO TAPOROSKY JUNIOR</b> · Prontuário 33.753‑Pr</p>
-    <span class="editing" id="editing" hidden></span>
+    <button type="button" id="btnCorrigir" class="btn-corr" hidden>✏️ Corrigir um relatório salvo</button>
+    <div class="editing" id="editing" hidden></div>
   </header>
+  <section class="card" id="corrBox" hidden>
+    <h2>Corrigir um relatório salvo <small>Toque em Abrir no relatório que precisa de correção</small></h2>
+    <div class="corr-list" id="corrLista"><p class="hint-p">Carregando…</p></div>
+    <div class="row-btns"><button type="button" id="btnCorrFechar">Fechar</button><span class="status" id="corrStatus" role="status"></span></div>
+  </section>
 
   <form id="form" autocomplete="off">
   <div class="wrap">
@@ -266,6 +350,17 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
         <label class="f">Ministério Infantil (participantes)<input id="infantil" inputmode="numeric" class="num"></label>
         <label class="f">Ministério de Adolescentes (participantes)<input id="adolescentes" inputmode="numeric" class="num"></label>
       </div>
+      <fieldset class="opts">
+        <legend>Este culto é:</legend>
+        <label class="opt"><input type="radio" name="tipoCulto" value="Culto normal" checked><span>⛪ Culto normal</span></label>
+        <label class="opt"><input type="radio" name="tipoCulto" value="Feriado"><span>📅 Feriado</span></label>
+      </fieldset>
+      <fieldset class="opts">
+        <legend>Como está o tempo? <small>pode marcar mais de um</small></legend>
+        <label class="opt"><input type="checkbox" name="clima" value="Chovendo"><span>🌧️ Chovendo</span></label>
+        <label class="opt"><input type="checkbox" name="clima" value="Frio"><span>🥶 Frio</span></label>
+        <label class="opt"><input type="checkbox" name="clima" value="Calor"><span>☀️ Calor</span></label>
+      </fieldset>
     </section>
 
     <section class="card">
@@ -329,6 +424,28 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
 </div>
 </div>
 
+<div id="adm" hidden>
+<div class="wrap">
+  <header class="top">
+    <button type="button" class="back" data-go="home">← Início</button>
+    <span class="eyebrow">54ª IEQ · Administrador</span>
+    <h1>Usuários</h1>
+    <p class="sub">Cadastre pessoas, aprove pedidos e escolha o que cada uma pode usar.</p>
+  </header>
+  <section class="card">
+    <h2>Cadastrar nova pessoa</h2>
+    <div class="grid two">
+      <label class="f">Nome completo<input id="nNome" autocapitalize="words"></label>
+      <label class="f">Usuário<input id="nLogin" autocapitalize="none" spellcheck="false" placeholder="ex.: maria.silva"></label>
+      <label class="f">Senha provisória<input id="nSenha" autocomplete="off" placeholder="a pessoa troca no 1º acesso"></label>
+    </div>
+    <div class="perm-box" id="nPerms"></div>
+    <div class="row-btns"><button class="primary" type="button" id="btnNovoUsu">Cadastrar</button></div>
+  </section>
+  <div class="usu-list" id="usuLista"><p class="hint-p">Carregando…</p></div>
+  <div class="actions"><span class="status" id="admStatus" role="status"></span></div>
+</div>
+</div>
 <div id="esc" hidden>
 <div class="wrap">
   <header class="top">
@@ -478,7 +595,8 @@ function makePad(id, label){
   let drawing = false, last = null;
   const pad = { empty: true,
     clear(){ ctx.clearRect(0,0,c.width,c.height); pad.empty = true; hint.hidden = false; st.textContent = ""; },
-    data(){ return pad.empty ? "" : c.toDataURL("image/png"); } };
+    data(){ return pad.empty ? "" : c.toDataURL("image/png"); },
+    load(url){ pad.clear(); if (!url) return; const im = new Image(); im.onload = () => { ctx.drawImage(im, 0, 0, c.width, c.height); }; im.src = url; pad.empty = false; hint.hidden = true; st.textContent = "✓ Assinado"; } };
   const pos = e => { const r = c.getBoundingClientRect(); return { x:(e.clientX-r.left)*c.width/r.width, y:(e.clientY-r.top)*c.height/r.height }; };
   c.addEventListener("pointerdown", e => { e.preventDefault(); c.setPointerCapture(e.pointerId); drawing = true; last = pos(e);
     ctx.beginPath(); ctx.arc(last.x,last.y,ctx.lineWidth/2,0,Math.PI*2); ctx.fillStyle = ctx.strokeStyle; ctx.fill(); });
@@ -547,6 +665,8 @@ function collect(comAssinaturas){
   FIELDS.forEach(k => r[k] = $(k).value.trim());
   r.pastores = PASTORES.map((nome,i) => ({nome, presente:$("ps"+i).checked}));
   for (let i=0;i<N_OX;i++) r.pastores.push({nome:$("ox"+i).value.trim(), presente:$("ox"+i+"chk").checked, outro:true});
+  r.tipoCulto = (document.querySelector('input[name="tipoCulto"]:checked')||{}).value || "";
+  r.clima = [...document.querySelectorAll('input[name="clima"]:checked')].map(x=>x.value);
   r.dizimistas = [];
   for (let i=0;i<nDz;i++) r.dizimistas.push({nome:$("dzNome"+i).value.trim(),valor:$("dzValor"+i).value.trim()});
   r.diaconos = []; for (let i=0;i<N_DC;i++) r.diaconos.push($("dc"+i).value.trim());
@@ -577,10 +697,15 @@ function fill(r){
   ajustaDz(dzs.length);
   for (let i=0;i<nDz;i++){ const d=dzs[i]||{}; $("dzNome"+i).value=d.nome||""; $("dzValor"+i).value=d.valor||""; }
   for (let i=0;i<N_DC;i++) $("dc"+i).value=(r.diaconos||[])[i]||"";
+  const tc = r.tipoCulto || "Culto normal";
+  document.querySelectorAll('input[name="tipoCulto"]').forEach(x => x.checked = x.value === tc);
+  const cl = r.clima || [];
+  document.querySelectorAll('input[name="clima"]').forEach(x => x.checked = cl.indexOf(x.value) >= 0);
   recalc();
 }
 function blank(){
   fill({pastores:[{nome:PASTORES[0],presente:true}]});
+  $("btnSave").textContent = "Salvar e gerar PDF";
   const today = new Date(); const iso = today.toISOString().slice(0,10);
   $("data").value = iso; $("diaSemana").value = DIAS[today.getDay()];
   Object.values(PADS).forEach(p=>p.clear());
@@ -617,7 +742,8 @@ function makePdf(r){
   const cell=(c,row,lab,v,span=1)=>{ const x=L+c*cw, yy=y+row*rh; box(x,yy,cw*span,rh); if(lab) t(lab,x+1,yy+3,{s:6.5}); if(v!==undefined) val(v,x+cw*span-2,yy+7.5,{a:"right",b:1}); };
   cell(0,0,"Dia da semana",r.diaSemana); cell(1,0,"Horário",r.horario); cell(2,0,"Visitantes",r.visitantes); cell(3,0,"Total de presentes",r.totalPresentes);
   cell(0,1,"Ministério Infantil",r.infantil); cell(1,1,"Ministério de Adolescentes",r.adolescentes); cell(2,1,"Helpers em serviço",r.diaconosServico); cell(3,1,"Crianças apresentadas",r.criancas);
-  y+=2*rh;
+  cell(0,2,"Este culto é",r.tipoCulto||"",2); cell(2,2,"Como estava o tempo",(r.clima||[]).join(", ")||"–",2);
+  y+=3*rh;
 
   // Pastores / visitas
   box(L,y,W/2,5); box(L+W/2,y,W/2,5); t("Pastores presentes",L+W/4,y+3.6,{b:1,a:"center"}); y+=5;
@@ -670,27 +796,151 @@ function makePdf(r){
 function pdfName(r){ return `REFC_${(r.data||"sem-data")}${r.horario?"_"+r.horario.replace(":","h"):""}.pdf`; }
 
 
-let SENHA = "";
-try { SENHA = sessionStorage.getItem("refcSenha") || ""; } catch(_) {}
+let SENHA = "";            // guarda o "token" da sessão de quem entrou
+let EU = null;             // usuário logado: {login, nome, perms, ...}
+try { SENHA = localStorage.getItem("refcToken") || ""; } catch(_) {}
+const PERM_NOMES = { relatorio:"Relatório de culto", corrigir:"Corrigir relatórios", visitantes:"Visitantes", escala:"Escala", compartilhar:"Compartilhar a escala", admin:"Administrador" };
+const pode = p => !!EU && (EU.perms.includes(p) || EU.perms.includes("admin"));
 
 function go(tela){
-  ["home","app","vis","esc"].forEach(id => { $(id).hidden = id !== tela; });
+  const perm = { app:"relatorio", vis:"visitantes", esc:"escala", adm:"admin" }[tela];
+  if (perm && !pode(perm) && !(tela === "app" && pode("corrigir"))) tela = "home";
+  ["home","app","vis","esc","adm"].forEach(id => { $(id).hidden = id !== tela; });
   window.scrollTo(0,0);
   if (tela === "vis") visAbrir();
   if (tela === "esc") escAbrir();
+  if (tela === "adm") admAbrir();
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
-function entrar(ok){
-  if (ok){ try{ sessionStorage.setItem("refcSenha", SENHA); }catch(_){}
-    $("lock").hidden = true; go("home"); }
-  else { $("lockStatus").textContent = "Senha incorreta. Confira com o responsável."; $("lockStatus").className="status err"; $("btnEntrar").disabled=false; }
+function lockMsg(msg, kind){ const s=$("lockStatus"); s.textContent=msg||""; s.className="status"+(kind?" "+kind:""); }
+function authTela(id){ ["fEntrar","fCadastro","fAdmin0","fTroca"].forEach(f => $(f).hidden = f !== id); lockMsg(""); const first=$(id).querySelector("input"); if(first) setTimeout(()=>first.focus(),50); }
+document.querySelectorAll("[data-auth]").forEach(b => b.onclick = () => authTela(b.dataset.auth));
+function mostrarLock(){ ["home","app","vis","esc","adm"].forEach(id=>$(id).hidden=true); $("lock").hidden=false; }
+function aplicarUsuario(u){
+  EU = u;
+  $("olaNome").textContent = (u.nome||"").split(" ")[0];
+  let algum = false;
+  document.querySelectorAll("#home [data-perm]").forEach(b => { const ok = pode(b.dataset.perm) || (b.dataset.perm === "relatorio" && pode("corrigir")); b.hidden = !ok; if (ok && b.dataset.perm!=="admin") algum = true; });
+  $("semPerm").hidden = algum || pode("admin");
+  $("btnCorrigir").hidden = !pode("corrigir");
+  const share = pode("compartilhar");
+  $("btnEscPdf").hidden = !share; $("btnEscZap").hidden = !share;
 }
-$("lockForm").addEventListener("submit", e => {
-  e.preventDefault(); SENHA = $("senha").value.trim(); if(!SENHA) return;
-  $("btnEntrar").disabled = true; $("lockStatus").textContent = "Verificando…"; $("lockStatus").className="status";
-  google.script.run.withSuccessHandler(entrar).withFailureHandler(()=>entrar(false)).verificarSenha(SENHA);
+function logado(res){
+  SENHA = res.token; try{ localStorage.setItem("refcToken", SENHA); }catch(_){}
+  aplicarUsuario(res.usuario);
+  if (res.usuario.trocarSenha){ $("tMsg").textContent = "Por segurança, troque a senha provisória por uma só sua."; $("btnTrocaVoltar").hidden = true; authTela("fTroca"); return; }
+  $("lock").hidden = true; go("home");
+}
+function erroMsg(err){ return (err && err.message) || "Não foi possível conectar. Confira a internet e tente de novo."; }
+function ocupado(btn, sim){ $(btn).disabled = sim; }
+
+$("fEntrar").addEventListener("submit", e => {
+  e.preventDefault();
+  const l=$("aLogin").value.trim(), s=$("aSenha").value;
+  if (!l || !s){ lockMsg("Digite seu usuário e sua senha.","err"); return; }
+  ocupado("btnEntrar",true); lockMsg("Entrando…");
+  google.script.run.withSuccessHandler(res => { ocupado("btnEntrar",false); $("aSenha").value=""; logado(res); })
+    .withFailureHandler(err => { ocupado("btnEntrar",false); lockMsg(erroMsg(err),"err"); }).entrar(l, s);
 });
-if (SENHA) google.script.run.withSuccessHandler(ok=>{ if(ok) entrar(true); }).verificarSenha(SENHA);
+$("fCadastro").addEventListener("submit", e => {
+  e.preventDefault();
+  if ($("cSenha").value !== $("cSenha2").value){ lockMsg("As duas senhas não estão iguais.","err"); return; }
+  ocupado("btnCadastrar",true); lockMsg("Enviando…");
+  google.script.run.withSuccessHandler(() => { ocupado("btnCadastrar",false); ["cNome","cLogin","cSenha","cSenha2"].forEach(i=>$(i).value=""); authTela("fEntrar"); lockMsg("✓ Cadastro enviado! Quando o administrador liberar, entre com seu usuário e senha.","ok"); })
+    .withFailureHandler(err => { ocupado("btnCadastrar",false); lockMsg(erroMsg(err),"err"); })
+    .cadastrarSe($("cNome").value, $("cLogin").value, $("cSenha").value);
+});
+$("fAdmin0").addEventListener("submit", e => {
+  e.preventDefault(); ocupado("btnAdmin0",true); lockMsg("Criando…");
+  google.script.run.withSuccessHandler(res => { ocupado("btnAdmin0",false); logado(res); })
+    .withFailureHandler(err => { ocupado("btnAdmin0",false); lockMsg(erroMsg(err),"err"); })
+    .configurarAdmin($("sIgreja").value, $("sNome").value, $("sLogin").value, $("sSenha").value);
+});
+$("fTroca").addEventListener("submit", e => {
+  e.preventDefault();
+  if ($("tNova").value !== $("tNova2").value){ lockMsg("As duas senhas novas não estão iguais.","err"); return; }
+  ocupado("btnTroca",true); lockMsg("Salvando…");
+  google.script.run.withSuccessHandler(u => { ocupado("btnTroca",false); ["tAtual","tNova","tNova2"].forEach(i=>$(i).value=""); aplicarUsuario(u); $("lock").hidden = true; go("home"); })
+    .withFailureHandler(err => { ocupado("btnTroca",false); lockMsg(erroMsg(err),"err"); })
+    .trocarMinhaSenha(SENHA, $("tAtual").value, $("tNova").value);
+});
+$("btnTrocaVoltar").onclick = () => { $("lock").hidden = true; go("home"); };
+$("btnMinhaSenha").onclick = () => { $("tMsg").textContent = "Escolha uma nova senha."; $("btnTrocaVoltar").hidden = false; mostrarLock(); authTela("fTroca"); };
+$("btnSair").onclick = () => {
+  const t = SENHA; SENHA = ""; EU = null; try{ localStorage.removeItem("refcToken"); }catch(_){}
+  if (t) google.script.run.withSuccessHandler(()=>{}).withFailureHandler(()=>{}).sair(t);
+  mostrarLock(); authTela("fEntrar");
+};
+// ao abrir: continua logado, ou mostra entrar / configurar
+(function iniciar(){
+  authTela("fEntrar"); lockMsg("Carregando…");
+  const semSessao = () => google.script.run
+    .withSuccessHandler(est => { lockMsg(""); authTela(est.temUsuarios ? "fEntrar" : "fAdmin0"); })
+    .withFailureHandler(err => lockMsg(erroMsg(err),"err")).estadoSistema();
+  if (!SENHA){ semSessao(); return; }
+  google.script.run.withSuccessHandler(u => { lockMsg(""); aplicarUsuario(u); if (u.trocarSenha){ authTela("fTroca"); return; } $("lock").hidden = true; go("home"); })
+    .withFailureHandler(() => { SENHA=""; try{ localStorage.removeItem("refcToken"); }catch(_){} semSessao(); }).eu(SENHA);
+})();
+
+/* =================== ADMINISTRADOR =================== */
+let admLista = [];
+function admMsg(msg,kind){ const s=$("admStatus"); s.textContent=msg||""; s.className="status"+(kind?" "+kind:""); }
+function permBox(box, marcadas, pre){
+  box.textContent = "";
+  Object.keys(PERM_NOMES).forEach(p => {
+    const l=document.createElement("label"); const c=document.createElement("input"); c.type="checkbox"; c.value=p; c.checked=(marcadas||[]).includes(p); if (pre) c.id = pre + p;
+    const sp=document.createElement("span"); sp.textContent=PERM_NOMES[p]; l.append(c,sp); box.appendChild(l);
+  });
+}
+const permsDe = box => [...box.querySelectorAll("input:checked")].map(c=>c.value);
+function admRender(){
+  const box=$("usuLista"); box.textContent="";
+  admLista.forEach(u => {
+    const pend = u.situacao === "Aguardando aprovação";
+    const card=document.createElement("div"); card.className="usu"+(pend?" pend":"")+(u.situacao==="Desativado"?" off":"");
+    const top=document.createElement("div"); top.className="usu-top";
+    const nm=document.createElement("div"); const b=document.createElement("b"); b.textContent=u.nome; const lg=document.createElement("div"); lg.className="lg"; lg.textContent="@"+u.login + (u.login===EU.login?" (você)":""); nm.append(b,lg);
+    const sit=document.createElement("span"); sit.className="sit "+(pend?"pend":u.situacao); sit.textContent=u.situacao;
+    top.append(nm,sit);
+    const pb=document.createElement("div"); pb.className="perm-box"; permBox(pb, u.perms);
+    const ac=document.createElement("div"); ac.className="acesso"; ac.textContent = u.acesso ? "Último acesso: " + u.acesso : "Ainda não entrou no app";
+    const bt=document.createElement("div"); bt.className="row-btns";
+    const mk=(txt,cls,fn)=>{ const x=document.createElement("button"); x.type="button"; x.textContent=txt; if(cls) x.className=cls; x.onclick=fn; bt.appendChild(x); return x; };
+    if (pend) mk("Aprovar e liberar","primary",()=>admSalvar(u, permsDe(pb), "Ativo"));
+    else mk("Salvar permissões","primary",()=>admSalvar(u, permsDe(pb), u.situacao));
+    if (u.situacao==="Ativo") mk("Desativar","",()=>admSalvar(u, permsDe(pb), "Desativado"));
+    if (u.situacao==="Desativado") mk("Reativar","",()=>admSalvar(u, permsDe(pb), "Ativo"));
+    if (pend) mk("Recusar","",()=>admSalvar(u, [], "Desativado"));
+    mk("Redefinir senha","",()=>{
+      const nova = (Math.random().toString(36).slice(2,6) + Math.floor(10+Math.random()*89));
+      admMsg("Redefinindo…");
+      google.script.run.withSuccessHandler(l=>{ admLista=l; admRender(); admMsg("✓ Nova senha provisória de " + u.nome + ": " + nova + "  — passe para a pessoa. Ela vai criar uma senha nova ao entrar.","ok"); })
+        .withFailureHandler(err=>admMsg(erroMsg(err),"err")).redefinirSenha(SENHA, u.login, nova);
+    });
+    card.append(top,pb,ac,bt); box.appendChild(card);
+  });
+  if (!admLista.length) box.innerHTML='<p class="hint-p">Nenhum usuário ainda.</p>';
+}
+function admSalvar(u, perms, situacao){
+  admMsg("Salvando…");
+  google.script.run.withSuccessHandler(l=>{ admLista=l; admRender(); admMsg("✓ " + u.nome + ": alterações salvas.","ok"); if (u.login===EU.login) google.script.run.withSuccessHandler(aplicarUsuario).eu(SENHA); })
+    .withFailureHandler(err=>admMsg(erroMsg(err),"err"))
+    .salvarUsuario(SENHA, {login:u.login, nome:u.nome, perms, situacao});
+}
+let admIniciado=false;
+function admAbrir(){
+  if (!admIniciado){ admIniciado=true; permBox($("nPerms"), ["escala"], "np_"); }
+  admMsg("Carregando…");
+  google.script.run.withSuccessHandler(l=>{ admLista=l; admRender(); admMsg(""); }).withFailureHandler(err=>admMsg(erroMsg(err),"err")).listarUsuarios(SENHA);
+}
+$("btnNovoUsu").onclick = () => {
+  const d = { nome:$("nNome").value, login:$("nLogin").value, senha:$("nSenha").value, perms: permsDe($("nPerms")) };
+  if (!d.nome.trim() || !d.login.trim() || !d.senha){ admMsg("Preencha nome, usuário e senha provisória.","err"); return; }
+  $("btnNovoUsu").disabled=true; admMsg("Cadastrando…");
+  google.script.run.withSuccessHandler(l=>{ $("btnNovoUsu").disabled=false; admLista=l; admRender(); admMsg("✓ " + d.nome.trim() + " cadastrado(a). Passe o usuário “" + d.login.trim().toLowerCase() + "” e a senha provisória para a pessoa.","ok"); ["nNome","nLogin","nSenha"].forEach(i=>$(i).value=""); })
+    .withFailureHandler(err=>{ $("btnNovoUsu").disabled=false; admMsg(erroMsg(err),"err"); }).criarUsuario(SENHA, d);
+};
 
 function baixar(r){
   try { makePdf(r).save(pdfName(r)); setStatus("PDF baixado.","ok"); }
@@ -707,18 +957,55 @@ function salvar(){
   if (!r.data){ setStatus("Preencha a data do culto antes de salvar.","err"); $("data").focus(); return; }
   if (!window.jspdf){ setStatus("O gerador de PDF não carregou. Recarregue a página.","err"); return; }
   const b64 = makePdf(r).output("datauristring").split(",")[1];
-  $("btnSave").disabled = true; setStatus("Salvando na planilha…");
-  google.script.run
+  const corrigindo = !!editingId;
+  if (!corrigindo && !pode("relatorio")){ setStatus("Você tem permissão só para corrigir. Toque em “Corrigir um relatório salvo” e escolha o relatório.","err"); return; }
+  $("btnSave").disabled = true; setStatus(corrigindo ? "Salvando a correção…" : "Salvando na planilha…");
+  const run = google.script.run
     .withSuccessHandler(res => {
       $("btnSave").disabled = false;
-      setStatus("Relatório salvo na planilha.","ok");
+      setStatus(corrigindo ? "✓ Correção salva. O relatório na planilha e o PDF foram atualizados." : "Relatório salvo na planilha.","ok");
       if (res && res.link){ $("pdfLink").href = res.link; $("resultado").hidden = false; $("resultado").scrollIntoView({behavior:"smooth"}); }
     })
     .withFailureHandler(err => {
       $("btnSave").disabled = false;
       setStatus("Não foi possível salvar: " + (err && err.message || "erro") + ". Tente de novo.","err");
     })
-    .salvarRelatorio(SENHA, semImagens(r), b64, pdfName(r));
+  if (corrigindo) run.atualizarRelatorio(SENHA, editingId, semImagens(r), b64, pdfName(r), r);
+  else run.salvarRelatorio(SENHA, semImagens(r), b64, pdfName(r), r);
+}
+
+/* ---------- corrigir relatório salvo ---------- */
+function corrMsg(m,k){ const s=$("corrStatus"); s.textContent=m||""; s.className="status"+(k?" "+k:""); }
+$("btnCorrigir").onclick = () => {
+  $("corrBox").hidden = false; corrMsg("Carregando…"); $("corrBox").scrollIntoView({behavior:"smooth",block:"start"});
+  google.script.run.withSuccessHandler(lista => {
+    corrMsg(""); const box=$("corrLista"); box.textContent="";
+    if (!lista.length){ box.innerHTML='<p class="hint-p">Nenhum relatório disponível para correção ainda. Só aparecem os relatórios salvos depois desta atualização.</p>'; return; }
+    lista.forEach(it => {
+      const d=document.createElement("div"); d.className="corr-item";
+      const t=document.createElement("div"); const b=document.createElement("b"); b.textContent = it.data + " · " + it.dia + (it.horario ? " · " + it.horario : "");
+      const sm=document.createElement("small"); sm.textContent = "Total " + fmtR(Number(it.total)||0) + " · enviado por " + (it.enviadoPor||"–") + (it.editadoPor ? " · corrigido por " + it.editadoPor : "");
+      t.append(b,sm);
+      const bt=document.createElement("button"); bt.type="button"; bt.textContent="Abrir";
+      bt.onclick = () => corrAbrir(it, bt);
+      d.append(t,bt); box.appendChild(d);
+    });
+  }).withFailureHandler(err => corrMsg(erroMsg(err),"err")).listarRelatorios(SENHA);
+};
+$("btnCorrFechar").onclick = () => { $("corrBox").hidden = true; };
+function corrAbrir(it, bt){
+  bt.disabled = true; corrMsg("Abrindo…");
+  google.script.run.withSuccessHandler(rr => {
+    bt.disabled = false; corrMsg("");
+    fill(rr);
+    Object.values(PADS).forEach(p => p.clear());
+    (rr.assDiaconos||[]).forEach((url,i) => { if (url && PADS["sigDc"+i]) PADS["sigDc"+i].load(url); });
+    editingId = it.id;
+    $("editing").textContent = "✏️ Corrigindo o relatório de " + it.data + (it.horario ? " (" + it.horario + ")" : "") + ". Ao salvar, ele será substituído pela versão corrigida. Para fazer um relatório novo, toque em Novo relatório.";
+    $("editing").hidden = false; $("btnSave").textContent = "Salvar correção";
+    $("corrBox").hidden = true; $("resultado").hidden = true; setStatus("");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }).withFailureHandler(err => { bt.disabled = false; corrMsg(erroMsg(err),"err"); }).abrirRelatorio(SENHA, it.id);
 }
 
 $("btnSave").onclick = salvar;
@@ -1161,7 +1448,6 @@ function visAbrir(){
   if (!visIniciado){ visIniciado = true; $("vData").value = hojeISO(); ajustaDia(); $("rData").value = hojeISO(); }
   carregarDatas(); carregarVisitantes();
 }
-$("btnSair").onclick = () => { try{ sessionStorage.removeItem("refcSenha"); }catch(_){} SENHA=""; ["home","app","vis","esc"].forEach(id=>$(id).hidden=true); $("senha").value=""; $("btnEntrar").disabled=false; $("lockStatus").textContent=""; $("lock").hidden=false; };
 </script>
 </body>
 </html>
