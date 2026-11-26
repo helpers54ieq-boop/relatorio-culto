@@ -352,7 +352,9 @@ a.btnlink{display:inline-block;text-decoration:none;font-weight:600;border-radiu
       </div>
       <fieldset class="opts">
         <legend>Este culto é:</legend>
-        <label class="opt"><input type="radio" name="tipoCulto" value="Culto normal" checked><span>⛪ Culto normal</span></label>
+        <label class="opt"><input type="radio" name="tipoCulto" value="Culto Regular" checked><span>⛪ Culto Regular</span></label>
+        <label class="opt"><input type="radio" name="tipoCulto" value="Culto com evento especial"><span>✨ Culto com evento especial</span></label>
+        <label class="opt"><input type="radio" name="tipoCulto" value="Evento Especial"><span>🎉 Evento Especial</span></label>
         <label class="opt"><input type="radio" name="tipoCulto" value="Feriado"><span>📅 Feriado</span></label>
       </fieldset>
       <fieldset class="opts">
@@ -697,7 +699,7 @@ function fill(r){
   ajustaDz(dzs.length);
   for (let i=0;i<nDz;i++){ const d=dzs[i]||{}; $("dzNome"+i).value=d.nome||""; $("dzValor"+i).value=d.valor||""; }
   for (let i=0;i<N_DC;i++) $("dc"+i).value=(r.diaconos||[])[i]||"";
-  const tc = r.tipoCulto || "Culto normal";
+  const tc = (!r.tipoCulto || r.tipoCulto === "Culto normal") ? "Culto Regular" : r.tipoCulto;
   document.querySelectorAll('input[name="tipoCulto"]').forEach(x => x.checked = x.value === tc);
   const cl = r.clima || [];
   document.querySelectorAll('input[name="clima"]').forEach(x => x.checked = cl.indexOf(x.value) >= 0);
